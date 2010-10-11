@@ -6,14 +6,22 @@ require 'config'
 module PaypalAdaptive
   class IpnNotification
     
-    def initialize(env=nil)
-      @env = env
-      @@config ||= PaypalAdaptive::Config.new(@env)
+    def initialize(data, env=nil)
+      @@config ||= PaypalAdaptive::Config.new(env)
       @@paypal_base_url ||= @@config.paypal_base_url
+      
+      @data = data
+      validate
     end
     
-    def send_back(data)
-      data = "cmd=_notify-validate&#{data}"
+    def valid?
+      @valid
+    end
+    
+    protected
+    
+    def validate
+      data = "cmd=_notify-validate&#{@data}"
       url = URI.parse @@paypal_base_url
       http = Net::HTTP.new(url.host, 443)
       http.use_ssl = (url.scheme == 'https')
@@ -21,11 +29,7 @@ module PaypalAdaptive
       path = "#{@@paypal_base_url}/cgi-bin/webscr"
       resp, response_data = http.post(path, data)
       
-      @verified = response_data == "VERIFIED"
-    end
-    
-    def verified?
-      @verified
+      @valid = response_data == "VERIFIED"
     end
     
   end
