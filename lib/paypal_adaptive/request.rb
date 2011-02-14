@@ -1,13 +1,4 @@
-require 'json'
-require 'config'
-require 'net/http'
-require 'net/https'
-require 'response'
-
 module PaypalAdaptive
-  class NoDataError < Exception
-  end
-
   class Request
     def initialize(env = nil)
       @env = env
