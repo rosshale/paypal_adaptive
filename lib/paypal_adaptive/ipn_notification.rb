@@ -22,9 +22,11 @@ module PaypalAdaptive
       http.use_ssl = (url.scheme == 'https')
       
       path = "#{@@paypal_base_url}/cgi-bin/webscr"
-      resp, response_data = http.post(path, data)
+      response = http.post(path, data)
       
-      @valid = response_data == "VERIFIED"
+      raise response.error! unless response.is_a?(Net::HTTPOK)
+      
+      @valid = response.body == "VERIFIED"
     end
     
   end
