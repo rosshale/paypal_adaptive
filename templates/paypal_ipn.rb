@@ -5,11 +5,9 @@ class PaypalIpn
   def self.call(env)
     if env["PATH_INFO"] =~ /^\/paypal_ipn/
       request = Rack::Request.new(env)
-      params = request.params
       
-      ipn = PaypalAdaptive::IpnNotification.new
-      ipn.send_back(env['rack.request.form_vars'])
-      if ipn.verified?
+      ipn = PaypalAdaptive::IpnNotification.new(env['rack.request.form_vars'])
+      if ipn.valid?
         #mark transaction as completed in your DB
         output = "Verified."
       else

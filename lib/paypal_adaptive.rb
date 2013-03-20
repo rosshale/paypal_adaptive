@@ -1,4 +1,11 @@
-require File.expand_path(File.join(File.dirname(__FILE__), "config"))
-require File.expand_path(File.join(File.dirname(__FILE__), "request"))
-require File.expand_path(File.join(File.dirname(__FILE__), "response"))
-require File.expand_path(File.join(File.dirname(__FILE__), "ipn_notification"))
+module PaypalAdaptive
+  
+end
+
+
+require 'paypal_adaptive/config'
+require 'paypal_adaptive/ipn_notification'
+require 'paypal_adaptive/no_data_error'
+require 'paypal_adaptive/request'
+require 'paypal_adaptive/response'
+require 'paypal_adaptive/version'

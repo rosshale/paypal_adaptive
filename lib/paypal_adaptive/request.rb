@@ -1,13 +1,4 @@
-require 'json'
-require 'config'
-require 'net/http'
-require 'net/https'
-require 'response'
-
 module PaypalAdaptive
-  class NoDataError < Exception
-  end
-
   class Request
     def initialize(env = nil)
       @env = env
@@ -83,9 +74,11 @@ module PaypalAdaptive
       http = Net::HTTP.new(url.host, 443)
       http.use_ssl = (url.scheme == 'https')
 
-      resp, response_data = http.post(path, api_request_data, @@headers)
+      response = http.post(path, api_request_data, @@headers)
+      
+      raise response.error! unless response.is_a?(Net::HTTPOK)
 
-      JSON.parse(response_data)
+      JSON.parse(response.body)
     end
   end
 
